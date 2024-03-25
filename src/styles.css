@@ -1,0 +1,32 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --ff-primary: "Poppins", sans-serif;
+
+  --fw-regular: 400;
+  --fw-bold: 700;
+  --fw-extra-bold: 800;
+
+  --fst-normal: normal;
+  --fst-italic: italic;
+
+  --fs-body: 1rem;
+}
+
+body {
+  line-height: 1.6;
+  margin: 0;
+  font-family: var(--ff-primary);
+  font-size: var(--ff-body);
+  font-weight: var(--fw-regular);
+}
+
+main {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
