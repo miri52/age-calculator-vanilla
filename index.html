@@ -21,8 +21,58 @@
   <body>
     <main>
       <div class="container">
-        <form></form>
-        <div>Day DD Month MM Year YYYYxcbbv -- years -- months -- days</div>
+        <form class="birthday-form" id="birthday-form">
+          <div class="birthday-inputs">
+            <div class="flex-container">
+              <label for="day">day</label>
+              <input
+                type="number"
+                min="1"
+                max="31"
+                name="day"
+                id="day"
+                placeholder="DD"
+              />
+            </div>
+            <div class="flex-container">
+              <label for="month">month</label>
+              <input
+                type="number"
+                min="1"
+                max="12"
+                name="month"
+                id="month"
+                placeholder="MM"
+              />
+            </div>
+
+            <div class="flex-container">
+              <label for="year">year</label>
+              <input
+                type="number"
+                min="1900"
+                max="2100"
+                name="year"
+                id="year"
+                placeholder="YYYY"
+              />
+            </div>
+          </div>
+
+          <div class="show-age-btn-container">
+            <input
+              type="image"
+              src="./assets/images/icon-arrow.svg"
+              alt="Show age"
+              class="show-age-btn"
+            />
+          </div>
+        </form>
+        <div>
+          <p>-- years</p>
+          <p>-- months</p>
+          <p>-- days</p>
+        </div>
         <div class="attribution">
           Challenge by
           <a href="https://www.frontendmentor.io?ref=challenge" target="_blank"

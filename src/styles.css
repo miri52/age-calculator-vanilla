@@ -13,6 +13,22 @@
   --fst-italic: italic;
 
   --fs-body: 1rem;
+  --fs-input: 2rem;
+  --fs-extra: 0.7rem;
+
+  --purple: hsl(259, 100%, 65%);
+  --light-red: hsl(0, 100%, 67%);
+  --white: hsl(0, 0%, 100%);
+  --off-white: hsl(0, 0%, 94%);
+  --light-grey: hsl(0, 0%, 86%);
+  --smokey-grey: hsl(0, 1%, 44%);
+  --off-black: hsl(0, 0%, 8%);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 body {
@@ -23,10 +39,83 @@ body {
   font-weight: var(--fw-regular);
 }
 
+input {
+  width: 5em;
+  padding: 0.5em;
+  color: var(--off-black);
+  font-size: var(--fs-body);
+  /* desktop
+  font-size: var(--fs-input); */
+  font-weight: var(--fw-extra-bold);
+}
+
+input[type="image"] {
+  font-size: var(--fs-body);
+}
+
+label {
+  color: var(--smokey-grey);
+  text-transform: uppercase;
+  font-size: var(--fs-extra);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.2rem;
+  margin-bottom: 0.5em;
+}
+
 main {
   height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+/* .container {
+  max-width: 375px;
+} */
+
+.flex-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.birthday-form {
+  padding-bottom: 4em;
+  margin-bottom: 4em;
+  border-bottom: 1px solid var(--light-grey);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* desktop the button has to be on the right */
+  gap: 1em;
+  position: relative;
+}
+
+.attribution {
+  font-size: var(--fs-extra);
+  margin-top: 5em;
+}
+
+.birthday-inputs {
+  display: flex;
+  /* gap still to be adjusted */
+  gap: 2em;
+}
+
+.show-age-btn-container {
+  position: absolute;
+  top: 90px;
+  /* desktop
+  top: 120px; */
+}
+
+.show-age-btn {
+  padding: 1.5em;
+  background-color: var(--purple);
+  border-radius: 50%;
+}
+
+.show-age-btn:hover,
+.show-age-btn:focus {
+  background-color: var(--off-black);
 }
