@@ -14,6 +14,7 @@
 
   --fs-body: 1rem;
   --fs-input: 2rem;
+  --fs-result: 3em;
   --fs-extra: 0.7rem;
 
   --purple: hsl(259, 100%, 65%);
@@ -37,6 +38,7 @@ body {
   font-family: var(--ff-primary);
   font-size: var(--ff-body);
   font-weight: var(--fw-regular);
+  background-color: var(--off-white);
 }
 
 input {
@@ -47,10 +49,12 @@ input {
   /* desktop
   font-size: var(--fs-input); */
   font-weight: var(--fw-extra-bold);
+  border: 1px solid var(--light-grey);
 }
 
 input[type="image"] {
   font-size: var(--fs-body);
+  border: none;
 }
 
 label {
@@ -70,9 +74,13 @@ main {
   justify-content: center;
 }
 
-/* .container {
-  max-width: 375px;
-} */
+.container {
+  /* max-width: 375px; */
+  background-color: var(--white);
+  padding: 2em;
+  min-width: 500px;
+  border-radius: 3% 3% 30% 3%;
+}
 
 .flex-container {
   display: flex;
@@ -85,7 +93,6 @@ main {
   border-bottom: 1px solid var(--light-grey);
   display: flex;
   flex-direction: column;
-  align-items: center;
   /* desktop the button has to be on the right */
   gap: 1em;
   position: relative;
@@ -104,7 +111,8 @@ main {
 
 .show-age-btn-container {
   position: absolute;
-  top: 90px;
+  top: 85px;
+  align-self: center;
   /* desktop
   top: 120px; */
 }
@@ -113,9 +121,24 @@ main {
   padding: 1.5em;
   background-color: var(--purple);
   border-radius: 50%;
+  transition: background-color 0.3s ease;
 }
 
 .show-age-btn:hover,
 .show-age-btn:focus {
   background-color: var(--off-black);
+}
+
+.result {
+  font-size: var(--fs-result);
+  font-weight: var(--fw-bold);
+  font-style: var(--fst-italic);
+}
+
+.result p {
+  margin: 0;
+}
+
+.amount {
+  color: var(--purple);
 }
