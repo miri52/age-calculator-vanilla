@@ -8,6 +8,24 @@ function isRequired(value) {
   }
 }
 
+const dayInputEl = document.getElementById("day");
+dayInputEl.addEventListener("input", checkValue);
+dayInputEl.addEventListener("focusout", checkIsRequired);
+
+function checkValue(e) {
+  console.log(e.target.value);
+  let inputValue = e.target.value;
+}
+
+function checkIsRequired(e) {
+  console.log(e);
+  console.dir(e);
+  let inputValue = e.target.value;
+  let dayErrorMessage = isRequired(inputValue);
+  const errMessageEl = document.getElementById("err-msg-day");
+  errMessageEl.innerText = dayErrorMessage;
+}
+
 function getBirthdayDate(e) {
   e.preventDefault();
   const errMsgs = document.querySelectorAll(".err-msg");
@@ -17,15 +35,9 @@ function getBirthdayDate(e) {
   const monthInputEl = document.getElementById("month");
   const yearInputEl = document.getElementById("year");
 
-  const dayErrorMessage = isRequired(dayInputEl.value);
+  // const dayErrorMessage = isRequired(dayInputEl.value);
   const monthErrorMessage = isRequired(monthInputEl.value);
   const yearErrorMessage = isRequired(yearInputEl.value);
-
-  if (dayErrorMessage) {
-    const errMessageEl = document.getElementById("err-msg-day");
-    errMessageEl.innerText = dayErrorMessage;
-    return;
-  }
 
   if (monthErrorMessage) {
     const errMessageEl = document.getElementById("err-msg-month");
