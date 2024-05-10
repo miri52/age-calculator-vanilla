@@ -50,6 +50,7 @@ input {
   font-size: var(--fs-input); */
   font-weight: var(--fw-extra-bold);
   border: 1px solid var(--light-grey);
+  border-radius: 5px;
 }
 
 input[type="image"] {
@@ -109,9 +110,16 @@ main {
   gap: 2em;
 }
 
+.err-msg {
+  color: var(--light-red);
+  font-size: var(--fs-extra);
+  font-style: var(--fst-italic);
+  padding: 0.75em 0;
+}
+
 .show-age-btn-container {
   position: absolute;
-  top: 85px;
+  top: 115px;
   align-self: center;
   /* desktop
   top: 120px; */

@@ -8,22 +8,50 @@ function isRequired(value) {
   }
 }
 
+const inputs = document.querySelectorAll("input[type='number']");
+inputs.forEach((input) => {
+  input.addEventListener("focusout", () => {
+    checkIsRequired(input, `err-msg-${input.id}`);
+  });
+  input.addEventListener("input", () => {
+    checkIsRequired(input, `err-msg-${input.id}`);
+  });
+});
+
+function checkIsRequired(input, errorMessageId) {
+  let inputValue = input.value;
+  let errorMessage = isRequired(inputValue);
+  const errorMessageEl = document.getElementById(errorMessageId);
+  errorMessageEl.innerText = errorMessage;
+
+  const label = document.querySelector(`label[for='${input.id}']`);
+
+  if (errorMessage) {
+    input.style.borderColor = getComputedStyle(
+      document.documentElement
+    ).getPropertyValue("--light-red");
+    label.style.color = getComputedStyle(
+      document.documentElement
+    ).getPropertyValue("--light-red");
+  } else {
+    input.style.borderColor = "";
+    label.style.color = "";
+  }
+}
+
+function isRequired(value) {
+  if (value.trim() === "") {
+    return "This field is required";
+  }
+  return "";
+}
+
 const dayInputEl = document.getElementById("day");
 dayInputEl.addEventListener("input", checkValue);
-dayInputEl.addEventListener("focusout", checkIsRequired);
 
 function checkValue(e) {
   console.log(e.target.value);
   let inputValue = e.target.value;
-}
-
-function checkIsRequired(e) {
-  console.log(e);
-  console.dir(e);
-  let inputValue = e.target.value;
-  let dayErrorMessage = isRequired(inputValue);
-  const errMessageEl = document.getElementById("err-msg-day");
-  errMessageEl.innerText = dayErrorMessage;
 }
 
 function getBirthdayDate(e) {
@@ -34,10 +62,6 @@ function getBirthdayDate(e) {
   const dayInputEl = document.getElementById("day");
   const monthInputEl = document.getElementById("month");
   const yearInputEl = document.getElementById("year");
-
-  // const dayErrorMessage = isRequired(dayInputEl.value);
-  const monthErrorMessage = isRequired(monthInputEl.value);
-  const yearErrorMessage = isRequired(yearInputEl.value);
 
   if (monthErrorMessage) {
     const errMessageEl = document.getElementById("err-msg-month");
