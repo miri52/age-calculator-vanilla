@@ -1,15 +1,8 @@
 import { intervalToDuration, parse } from "date-fns";
 
-function isRequired(value) {
-  if (!value) {
-    return "This field is required";
-  } else {
-    return "";
-  }
-}
+const birthdayInputs = document.querySelectorAll(".birthday-input");
 
-const inputs = document.querySelectorAll("input[type='number']");
-inputs.forEach((input) => {
+birthdayInputs.forEach((input) => {
   input.addEventListener("focusout", () => {
     checkIsRequired(input, `err-msg-${input.id}`);
   });
@@ -40,10 +33,7 @@ function checkIsRequired(input, errorMessageId) {
 }
 
 function isRequired(value) {
-  if (value.trim() === "") {
-    return "This field is required";
-  }
-  return "";
+  return value.trim() === "" ? "This field is required" : "";
 }
 
 const dayInputEl = document.getElementById("day");
