@@ -1,19 +1,50 @@
-import { intervalToDuration, parse } from "date-fns";
+import {
+  intervalToDuration,
+  isValid,
+  parse,
+  isBefore,
+  endOfYear,
+} from "date-fns";
+
+function handleInputEvents(input) {
+  let validationFunction;
+  switch (input.id) {
+    case "day":
+      validationFunction = isValidDay;
+      break;
+    case "month":
+      validationFunction = isValidMonth;
+      break;
+    case "year":
+      validationFunction = isValidYear;
+      break;
+    default:
+      validationFunction = isRequired;
+      break;
+  }
+  checkInputValidity(input, `err-msg-${input.id}`, validationFunction);
+}
 
 const birthdayInputs = document.querySelectorAll(".birthday-input");
 
 birthdayInputs.forEach((input) => {
   input.addEventListener("focusout", () => {
-    checkIsRequired(input, `err-msg-${input.id}`);
+    handleInputEvents(input);
   });
+
   input.addEventListener("input", () => {
-    checkIsRequired(input, `err-msg-${input.id}`);
+    handleInputEvents(input);
   });
 });
 
-function checkIsRequired(input, errorMessageId) {
-  let inputValue = input.value;
-  let errorMessage = isRequired(inputValue);
+function checkInputValidity(input, errorMessageId, validationFunction) {
+  let errorMessage;
+  if (input.value.trim() === "") {
+    errorMessage = "This field is required";
+  } else {
+    errorMessage = validationFunction(input.value);
+  }
+
   const errorMessageEl = document.getElementById(errorMessageId);
   errorMessageEl.innerText = errorMessage;
 
@@ -32,16 +63,31 @@ function checkIsRequired(input, errorMessageId) {
   }
 }
 
-function isRequired(value) {
-  return value.trim() === "" ? "This field is required" : "";
+function isValidDay(day) {
+  const numericDay = parseInt(day);
+  return !isNaN(numericDay) && numericDay >= 1 && numericDay <= 31
+    ? ""
+    : "Must be a valid day";
 }
 
-const dayInputEl = document.getElementById("day");
-dayInputEl.addEventListener("input", checkValue);
+function isValidMonth(month) {
+  const numericMonth = parseInt(month);
+  return !isNaN(numericMonth) && numericMonth >= 1 && numericMonth <= 12
+    ? ""
+    : "Must be a valid month";
+}
 
-function checkValue(e) {
-  console.log(e.target.value);
-  let inputValue = e.target.value;
+function isValidYear(year) {
+  const numericYear = parseInt(year);
+  //this doesn't work correctly because we are hardcoding the day and month
+  const parsedDate = parse(`${numericYear}-01-01`, "yyyy-MM-dd", new Date());
+  const currentDate = new Date();
+
+  return !isNaN(numericYear) &&
+    isValid(parsedDate) &&
+    isBefore(parsedDate, endOfYear(currentDate))
+    ? ""
+    : "Must be in the past";
 }
 
 function getBirthdayDate(e) {
@@ -52,18 +98,6 @@ function getBirthdayDate(e) {
   const dayInputEl = document.getElementById("day");
   const monthInputEl = document.getElementById("month");
   const yearInputEl = document.getElementById("year");
-
-  if (monthErrorMessage) {
-    const errMessageEl = document.getElementById("err-msg-month");
-    errMessageEl.innerText = monthErrorMessage;
-    return;
-  }
-
-  if (yearErrorMessage) {
-    const errMessageEl = document.getElementById("err-msg-year");
-    errMessageEl.innerText = yearErrorMessage;
-    return;
-  }
 
   const birthdayValue = `${dayInputEl.value}/${monthInputEl.value}/${yearInputEl.value}`;
 
