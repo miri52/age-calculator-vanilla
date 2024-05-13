@@ -1,65 +1,38 @@
-import {
-  intervalToDuration,
-  isValid,
-  parse,
-  isBefore,
-  endOfYear,
-} from "date-fns";
+import { intervalToDuration, parse, isBefore, endOfYear } from "date-fns";
+
+const dayInputEl = document.getElementById("day");
+const monthInputEl = document.getElementById("month");
+const yearInputEl = document.getElementById("year");
+const birthdayForm = document.getElementById("birthday-form");
+
+const errorMessages = {
+  requiredField: "This field is required",
+  invalidDay: "Must be a valid day",
+  invalidMonth: "Must be a valid month",
+  invalidYear: "Must be a valid year",
+  yearInThePast: "Must be in the past",
+  invalidNumber: "Must be a valid number",
+};
+
+const lightRedColor = getComputedStyle(
+  document.documentElement
+).getPropertyValue("--light-red");
 
 function handleInputEvents(input) {
-  let validationFunction;
-  switch (input.id) {
-    case "day":
-      validationFunction = isValidDay;
-      break;
-    case "month":
-      validationFunction = isValidMonth;
-      break;
-    case "year":
-      validationFunction = isValidYear;
-      break;
-    default:
-      validationFunction = isRequired;
-      break;
-  }
+  const validationFunction = getValidationFunction(input.id);
   checkInputValidity(input, `err-msg-${input.id}`, validationFunction);
 }
 
-const birthdayInputs = document.querySelectorAll(".birthday-input");
-
-birthdayInputs.forEach((input) => {
-  input.addEventListener("focusout", () => {
-    handleInputEvents(input);
-  });
-
-  input.addEventListener("input", () => {
-    handleInputEvents(input);
-  });
-});
-
-function checkInputValidity(input, errorMessageId, validationFunction) {
-  let errorMessage;
-  if (input.value.trim() === "") {
-    errorMessage = "This field is required";
-  } else {
-    errorMessage = validationFunction(input.value);
-  }
-
-  const errorMessageEl = document.getElementById(errorMessageId);
-  errorMessageEl.innerText = errorMessage;
-
-  const label = document.querySelector(`label[for='${input.id}']`);
-
-  if (errorMessage) {
-    input.style.borderColor = getComputedStyle(
-      document.documentElement
-    ).getPropertyValue("--light-red");
-    label.style.color = getComputedStyle(
-      document.documentElement
-    ).getPropertyValue("--light-red");
-  } else {
-    input.style.borderColor = "";
-    label.style.color = "";
+function getValidationFunction(inputId) {
+  switch (inputId) {
+    case "day":
+      return isValidDay;
+    case "month":
+      return isValidMonth;
+    case "year":
+      return isValidYear;
+    default:
+      return isRequired;
   }
 }
 
@@ -67,37 +40,49 @@ function isValidDay(day) {
   const numericDay = parseInt(day);
   return !isNaN(numericDay) && numericDay >= 1 && numericDay <= 31
     ? ""
-    : "Must be a valid day";
+    : errorMessages.invalidDay;
 }
 
 function isValidMonth(month) {
   const numericMonth = parseInt(month);
   return !isNaN(numericMonth) && numericMonth >= 1 && numericMonth <= 12
     ? ""
-    : "Must be a valid month";
+    : errorMessages.invalidMonth;
 }
 
 function isValidYear(year) {
   const numericYear = parseInt(year);
-  //this doesn't work correctly because we are hardcoding the day and month
+  if (isNaN(numericYear)) {
+    return errorMessages.invalidNumber;
+  }
   const parsedDate = parse(`${numericYear}-01-01`, "yyyy-MM-dd", new Date());
   const currentDate = new Date();
 
-  return !isNaN(numericYear) &&
-    isValid(parsedDate) &&
-    isBefore(parsedDate, endOfYear(currentDate))
+  return isBefore(parsedDate, endOfYear(currentDate))
     ? ""
-    : "Must be in the past";
+    : errorMessages.yearInThePast;
+}
+
+function checkInputValidity(input, errorMessageId, validationFunction) {
+  let errorMessage =
+    input.value.trim() === ""
+      ? errorMessages.requiredField
+      : validationFunction(input.value);
+
+  const errorMessageEl = document.getElementById(errorMessageId);
+  errorMessageEl.innerText = errorMessage;
+
+  const label = document.querySelector(`label[for='${input.id}']`);
+
+  input.style.borderColor = errorMessage ? lightRedColor : "";
+
+  label.style.color = errorMessage ? lightRedColor : "";
 }
 
 function getBirthdayDate(e) {
   e.preventDefault();
   const errMsgs = document.querySelectorAll(".err-msg");
-  Array.from(errMsgs).map((el) => (el.innerText = ""));
-
-  const dayInputEl = document.getElementById("day");
-  const monthInputEl = document.getElementById("month");
-  const yearInputEl = document.getElementById("year");
+  errMsgs.forEach((el) => (el.innerText = ""));
 
   const birthdayValue = `${dayInputEl.value}/${monthInputEl.value}/${yearInputEl.value}`;
 
@@ -108,14 +93,20 @@ function calculateAge(dob) {
   const birthdayDate = parse(dob, "dd/MM/yyyy", new Date());
   const dateToday = new Date();
 
-  const interval = intervalToDuration({ start: birthdayDate, end: dateToday });
+  if (isBefore(birthdayDate, dateToday)) {
+    const interval = intervalToDuration({
+      start: birthdayDate,
+      end: dateToday,
+    });
 
-  const age = {
-    years: interval.years || 0,
-    months: interval.months || 0,
-    days: interval.days || 0,
-  };
-  renderAge(age);
+    renderAge(interval);
+  } else {
+    const errMsgYearEl = document.getElementById("err-msg-year");
+    const yearInputLabel = document.querySelector(`label[for='year']`);
+    errMsgYearEl.innerText = errorMessages.yearInThePast;
+    yearInputEl.style.borderColor = lightRedColor;
+    yearInputLabel.style.color = lightRedColor;
+  }
 }
 
 function renderAge(age) {
@@ -125,13 +116,24 @@ function renderAge(age) {
   const ageMonthsEl = document.getElementById("age-months");
   const ageDaysEl = document.getElementById("age-days");
 
-  ageYearsEl.innerHTML = years;
-  ageMonthsEl.innerHTML = months;
-  ageDaysEl.innerHTML = days;
+  ageYearsEl.innerHTML = years || 0;
+  ageMonthsEl.innerHTML = months || 0;
+  ageDaysEl.innerHTML = days || 0;
 }
 
-const birthdayForm = document.getElementById("birthday-form");
 birthdayForm.addEventListener("submit", getBirthdayDate);
+
+birthdayForm.addEventListener("focusout", (e) => {
+  if (e.target.matches(".birthday-input")) {
+    handleInputEvents(e.target);
+  }
+});
+
+birthdayForm.addEventListener("input", (e) => {
+  if (e.target.matches(".birthday-input")) {
+    handleInputEvents(e.target);
+  }
+});
 
 if (module.hot) {
   module.hot.accept();
